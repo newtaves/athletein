@@ -13,8 +13,8 @@ eg: return '{'status':'success','user_id':123456, 'friends_list':[123145,2165,13
 
  At first we won't have database so you need to assume that in near future you will call a 
  function which will return the data in the format specified above. First write the function 
- somewhere else, then make data on your own or by use of Gemini after that if it runs successfully 
- that implement in the project.
+ somewhere else, then make data on your own or by use of Gemini after that test the function
+  if it runs successfully then implement it in the project.
 
   eg:
 def recomendation_generator():
