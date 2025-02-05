@@ -28,4 +28,4 @@ def recomendation_generator():
 """
 @views_bp.route("/")
 def views():
-    return "This is homepage"
+    return "{'status':'succss','message':'Welcome to homepage'}"
