@@ -29,7 +29,7 @@ def login():
         data = request.get_data()
         email = data.get('email')
         password = data.get('password')
-        
+
         if not password or not email:
             return jsonify({'status':'error','message':'email or password not provided.'}), 400
         user = User(db)
@@ -39,12 +39,8 @@ def login():
             return jsonify(user.get_user_by_id(pass_match.get('user_id')))
         else:
             return jsonify(pass_match)
-
-
-    
     else:
-        return jsonify({'error': str(e)}), 401
-
+        return jsonify({'status':'error','message':'method not allowed'}), 400
 
 @auth_bp.route('/logout')
 def logout():

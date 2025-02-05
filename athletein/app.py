@@ -31,6 +31,7 @@ def create_app():
     from athletein.network.network import network_bp
     from athletein.reccomendation.reccomendation import reccomendation_bp
     from athletein.user.user import user_bp
+    from athletein.tournaments.tournament import tournament_bp
 
     #Connecting blueprints to the flask_app
     app.register_blueprint(auth_bp)
@@ -39,6 +40,7 @@ def create_app():
     app.register_blueprint(network_bp)
     app.register_blueprint(reccomendation_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(tournament_bp)
 
 
     return app

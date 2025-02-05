@@ -45,3 +45,33 @@ class User:
                 return {'status': 'error', 'message': 'User not found'}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
+        
+class Tournaments:
+    def __init__(self,db):
+        self.db = db
+
+    def get_tournaments(self, user_id):
+        try:
+            doc_ref = self.db.collection('tournaments')
+            doc = doc_ref.get()
+            if doc.exists:
+                return {'status':'success', 'tournaments':doc.to_dict()}
+            else:
+                {'status':'error', 'message':"Error occured in Tournaments.get_tournaments"}
+        except Exception as e:
+            return {'status':'error', 'message':str(e)}
+
+    def add_tournament(self, tournament_data):
+        try:
+            doc_ref = self.db.collection("tournaments").document()
+            doc_ref.set(tournament_data)
+            return {'status':'success', 'tournament_id':doc_ref.id}
+        except Exception as e:
+            return {'status':'error', 'message':f'error while adding the tournament: {str(e)}'}
+
+    def get_participated_tournament_list(self, user_id):
+        doc_ref = self.db.collection("tournaments").where(filter=FieldFilter('','',''))
+
+    def apply_touranment(self, user_id):
+        doc = self.db
+
