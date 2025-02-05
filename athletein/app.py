@@ -1,10 +1,28 @@
-from flask import Flask
+from flask import Flask,g
+from flask_login import LoginManager
+from athletein.database.database import init_db, init_app
+from firebase_admin import firestore
+
 def create_app():
     #creating the flask factory
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'your_secret_key'  # Change this!
+    
+    #INtialize the database
+    init_db(r'.\configs\athletein-c89a8-firebase-adminsdk-fbsvc-215f0df83e.json')
 
-    #Required to set up cookies
-    app.config['SECRET_KEY'] = 'secret'
+    init_app(app)
+
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+
+    from athletein.database.models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
 
     #Importing blueprints to the flask app
     from athletein.auth.auth import auth_bp

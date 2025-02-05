@@ -1,42 +1,52 @@
-from flask import render_template, request, url_for, g, flash, Blueprint, session, redirect
+from flask import render_template, request, url_for, g, flash, Blueprint, session, redirect, jsonify, make_response
+from athletein.database.models import User
+from athletein.database.database import get_db
 
-auth_bp = Blueprint('auth',__name__, url_prefix='/auth')
+
+auth_bp = Blueprint('auth',__name__, url_prefix='/api')
 
 
-"""
-While writing the function make sure that return data as python dictionary in string
-
-eg: return '{'status':'success','user_id':123456, 'friends_list':[123145,2165,1315,],
- 'chat_history':[some chat data from database]}'
-
- This type of format is known as json.
-
- At first we won't have database so you need to assume that in near future you will call a 
- function which will return the data in the format specified above. First write the function 
- somewhere else, then make data on your own or by use of Gemini after that test the function
-  if it runs successfully then implement it in the project.
-
-  eg:
-def recomendation_generator():
-    try:
-        data = get_data_from_database()
-        running some algorithm........
-        return {'status':'success', 'recomendation_data':[data1,data2....]}
-    except Exception as e:
-        return {'status':'error', 'message':e}
-    
-"""
-
-@auth_bp.route('/signup', methods=["GET", "POST"])
+@auth_bp.route('/signup', methods=['POST'])
 def signup():
-    return "This is signup page"
+    db = get_db()
+    if request.method == "POST":
+        data = request.get_data()
+        email = data.get('email')
+        password = data.get('password')
+        name = data.get('name')
+        if not name or not password or not email:
+            return jsonify({'status':'error','message':'email or password or name not provided.'}), 400
+        new_user = User(db)
+        return jsonify(new_user.add_user(name, password, email))
+    else:
+        return jsonify({'status':'error','message':'method not allowed'}), 400
 
 
-@auth_bp.route('/signin', methods=["GET","POST"])
-def signin():
-    return "This is signup page"
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    db = get_db()
+    if request.method == 'POST':
+        data = request.get_data()
+        email = data.get('email')
+        password = data.get('password')
+        
+        if not password or not email:
+            return jsonify({'status':'error','message':'email or password not provided.'}), 400
+        user = User(db)
+        pass_match = user.check_password(email, password)
+
+        if pass_match.get('status')=='success':
+            return jsonify(user.get_user_by_id(pass_match.get('user_id')))
+        else:
+            return jsonify(pass_match)
+
+
+    
+    else:
+        return jsonify({'error': str(e)}), 401
+
 
 @auth_bp.route('/logout')
 def logout():
     # session.clear()
-    return redirect(url_for('main.home'))
+    return redirect(url_for('views.views'))

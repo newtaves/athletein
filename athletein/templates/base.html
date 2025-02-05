@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleteIn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">  </head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('views.index') }}">Home</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('views.profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+            <h1>Welcome to AthleteIn!</h1>
+            <p>This is the default homepage.</p>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2023 AthleteIn</p>
+    </footer>
+</body>
+</html>
