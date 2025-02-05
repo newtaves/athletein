@@ -10,10 +10,9 @@ auth_bp = Blueprint('auth',__name__, url_prefix='/api')
 def signup():
     db = get_db()
     if request.method == "POST":
-        data = request.get_data()
-        email = data.get('email')
-        password = data.get('password')
-        name = data.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        name = request.form.get('name')
         if not name or not password or not email:
             return jsonify({'status':'error','message':'email or password or name not provided.'}), 400
         new_user = User(db)
@@ -27,8 +26,8 @@ def login():
     db = get_db()
     if request.method == 'POST':
         data = request.get_data()
-        email = data.get('email')
-        password = data.get('password')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
         if not password or not email:
             return jsonify({'status':'error','message':'email or password not provided.'}), 400

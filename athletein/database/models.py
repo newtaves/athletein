@@ -40,7 +40,7 @@ class User:
             doc_ref = self.db.collection("users").document(user_id)
             doc = doc_ref.get()
             if doc.exists:
-                return {'status': 'success', 'user_data': doc.to_dict()}
+                return {'status': 'success', 'user_id':doc.id,'user_data': doc.to_dict()}
             else:
                 return {'status': 'error', 'message': 'User not found'}
         except Exception as e:
